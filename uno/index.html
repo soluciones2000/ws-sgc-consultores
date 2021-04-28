@@ -1,0 +1,102 @@
+<!doctype html>
+<html> 
+  <head>
+    <title>Socket.IO chat</title>
+    <meta charset="UTF-8">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+      #messages { margin-bottom: 40px }
+    </style>
+  </head>
+  <body>
+    <p id="parrafo"></p>
+    <!-- <ul id="messages"></ul> -->
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
+    <script src="node_modules/socket.io-client/dist/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      $(function () {
+        var socket = io('wss://ws.sgc-consultores.com.ve:50000');
+        
+        // var socket = io('wss://ws.sgc-consultores.com.ve:50000', { transports: ['websocket']});
+        // var socket = io('http://localhost:3000', { transports: ['websocket']});
+
+        $(window).on('beforeunload', function(){
+          socket.close();
+        });
+
+        socket.on('greet', function(data) {
+          console.log('socket data', data);
+        });
+
+
+        $('form').submit(function(){
+          socket.emit('card', $('#m').val());
+          $('#m').val('');
+          return false;
+        });
+        socket.on('card', function(msg){
+          // valores = JSON.parse(msg);
+          // parrafo.innerHTML = valores.nombre;
+          parrafo.innerHTML = parrafo.innerHTML+'<br/>'+msg;
+          console.log(msg);
+          $('#messages').append($('<li>').text(msg));
+          window.scrollTo(0, document.body.scrollHeight);
+        });
+      });
+    </script>
+  </body>
+</html>
+<!--  -->
+<!--  -->
+<!--  -->
+<!--
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Prueba</title>
+  <link rel="stylesheet" href="">
+  <script src="./socket.io.js"></script>
+</head>
+<body>
+  <p id="mensaje">Prueba</p>
+  <script>
+    var socket = io('wss://ws.sgc-consultores.com.ve');
+
+    socket.on('parrafo', function(data) {
+      console.log('socket data', data);
+
+    });
+
+    // function inicializarSocket() {
+    //   socket.onopen = function(evt) {
+    //   console.log("Websocket abierto");
+    // };
+
+    // socket.onmessage = function(evt) {
+    //   console.log("RECIBIDO: " + evt.data); 
+    // };
+
+    // socket.onclose = function(evt) {
+    //   console.log("Websocket cerrado");
+    // };
+
+    // socket.onerror = function(evt) {
+    //   console.log("ERROR: " + evt.data);
+    // }
+  </script>
+</body>
+</html>
+-->
